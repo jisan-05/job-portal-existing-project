@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
                 })
                 .then(res => {
                     console.log('Login token',res.data)
-                    
+                    setLoading(false)
                 })
             }
             else{
@@ -55,8 +55,8 @@ const AuthProvider = ({ children }) => {
                     setLoading(false);
                 })
             }
-
-            
+        
+        
         })
 
         return () => {
