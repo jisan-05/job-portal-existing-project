@@ -8,7 +8,12 @@ const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
-app.use(cors());
+app.use(
+    cors({
+        origin: ["http://localhost:5173"],
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -22,8 +27,8 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     },
 });
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASS:", process.env.DB_PASS);
+// console.log("DB_USER:", process.env.DB_USER);
+// console.log("DB_PASS:", process.env.DB_PASS);
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -47,9 +52,16 @@ async function run() {
                 expiresIn: "5h",
             });
             res.cookie("token", token, {
-                 httpOnly: true, secure: false
-                 })
-            .send({success: true})
+                httpOnly: true,
+                secure: false,
+            }).send({ success: true });
+        });
+
+        app.post("/logout", (req, res) => {
+            res.clearCookie("token", {
+                httpOnly: true,
+                secure: false,
+            }).send({ success: true });
         });
 
         // jobs related APIs
